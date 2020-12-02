@@ -15,6 +15,7 @@ app.use(localMiddleware);
 
 app.use(helmet());
 app.set("view engine", "pug");
+app.use("/uploads", express.static("uploads")); //file 을 directory에 전달하는 middleware, 경로가 uploads라면 uploads라는 directory안으로 file이 들어감
 app.use(cookieParser());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true}));
