@@ -16,14 +16,15 @@ app.use(localMiddleware);
 app.use(helmet());
 app.set("view engine", "pug");
 app.use("/uploads", express.static("uploads")); //file 을 directory에 전달하는 middleware, 경로가 uploads라면 uploads라는 directory안으로 file이 들어감
+app.use("/static", express.static("static"));
 app.use(cookieParser());
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: true}));
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.setHeader("Content-Security-Policy", "script-src 'self' https://archive.org");
     return next();
-    });
+});
 
 app.use(routes.home, globalRouter);
 app.use(routes.users, userRouter);  //app.use의 의미:누군가 /user로 접속하면 userRouter 전체를 사용
