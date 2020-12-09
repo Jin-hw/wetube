@@ -3,15 +3,17 @@ import morgan from "morgan";
 import helmet from "helmet";
 import bodyparser from "body-parser";
 import cookieParser from "cookie-parser";
+import passport from "passport";
+import session from "express-session";
 import { localMiddleware } from "./middlewares";
+import routes from "./routes";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
 import globalRouter from "./routers/globalRouter";
-import routes from "./routes";
+
+import "./passport";
 
 const app = express();
-
-app.use(localMiddleware);
 
 app.use(helmet());
 app.set("view engine", "pug");
@@ -21,10 +23,17 @@ app.use(cookieParser());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use(function (req, res, next) {
-    res.setHeader("Content-Security-Policy", "script-src 'self' https://archive.org");
-    return next();
-});
+app.use(
+    session({
+        secret: process.env.COOKIE_SECRET,
+        resave: true,
+        saveUninitialized: false
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(localMiddleware);
 
 app.use(routes.home, globalRouter);
 app.use(routes.users, userRouter);  //app.use의 의미:누군가 /user로 접속하면 userRouter 전체를 사용
