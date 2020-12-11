@@ -4,7 +4,9 @@ import helmet from "helmet";
 import bodyparser from "body-parser";
 import cookieParser from "cookie-parser";
 import passport from "passport";
+import mongoose from "mongoose";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import { localMiddleware } from "./middlewares";
 import routes from "./routes";
 import userRouter from "./routers/userRouter";
@@ -15,7 +17,13 @@ import "./passport";
 
 const app = express();
 
-app.use(helmet());
+const CookieStore = MongoStore(session);
+
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+    })
+);
 app.set("view engine", "pug");
 app.use("/uploads", express.static("uploads")); //file 을 directory에 전달하는 middleware, 경로가 uploads라면 uploads라는 directory안으로 file이 들어감
 app.use("/static", express.static("static"));
@@ -27,7 +35,8 @@ app.use(
     session({
         secret: process.env.COOKIE_SECRET,
         resave: true,
-        saveUninitialized: false
+        saveUninitialized: false,
+        store: new CookieStore({ mongooseConnection: mongoose.connection })
     })
 );
 app.use(passport.initialize());
