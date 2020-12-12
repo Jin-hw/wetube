@@ -31,10 +31,11 @@
     "routes": "^2.1.0",
     "sass-loader": "^10.1.0",
     "webpack": "^5.10.0",
-    "webpack-cli": "^4.2.0"
+    "webpack-cli": "^4.2.0",
+    "yarn": "^1.22.10"
   },
   "scripts": {
-    "dev:server": "nodemon --exec babel-node init.js --delay 2 --ignore 'scss' ",
+    "dev:server": "nodemon --exec babel-node init.js --delay 2 --ignore 'scss' --ignore 'static' ",
     "dev:assets": "cross-env WEBPACK_ENV=development webpack -w",
     "build:assets": "cross-env WEBPACK_ENV=production webpack"
   },
