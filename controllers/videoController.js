@@ -102,3 +102,21 @@ export const deleteVideo = async (req, res) => {
     }
     res.redirect(routes.home);
 }
+
+// Register Video View
+
+export const postRegisterView = async (req, res) => {
+    const {
+        params: { id }
+    } = req;
+    try {
+        const video = await Video.findById(id)
+        video.view += 1;
+        video.save();
+        res.statusCode(200);
+    } catch (error) {
+        res.statusCode(400);
+    } finally {
+        res.end();
+    }
+}
