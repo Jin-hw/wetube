@@ -2,6 +2,7 @@ import { query } from "express";
 
 import routes from "../routes";
 import Video from "../models/Video";
+import Commnet from "../models/Comment"
 
 export const home = async (req, res) => {
     try {
@@ -51,7 +52,7 @@ export const videoDetail = async (req, res) => {
         params: { id }
     } = req;
     try {
-        const video = await Video.findById(id).populate("creator");
+        const video = await Video.findById(id).populate("creator").populated("comment");
         res.render("videoDetail", { pageTitle: video.title, video });
     } catch (error) {
         res.redirect(routes.home);
@@ -109,8 +110,10 @@ export const postRegisterView = async (req, res) => {
     const {
         params: { id }
     } = req;
+    console.log(id);
     try {
-        const video = await Video.findById(id)
+        const video = await Video.findById(id);
+        console.log(id);
         video.view += 1;
         video.save();
         res.statusCode(200);
@@ -118,5 +121,28 @@ export const postRegisterView = async (req, res) => {
         res.statusCode(400);
     } finally {
         res.end();
+    }
+}
+
+//Add Commnet
+
+export const postAddComment = async (req, res) => {
+    const {
+        params: { id },
+        body: { comment },
+        user
+    } = req;
+    try {
+        const video = await Video.findById(id);
+        const newComment = await Comment.create({
+            text: comment,
+            creator: user.id
+        });
+        video.comment.push(newComment.id);
+        video.save();
+    } catch (error) {
+        res.status(400);
+    } finally {
+        res.end()
     }
 }
