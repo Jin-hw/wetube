@@ -52,7 +52,9 @@ export const videoDetail = async (req, res) => {
         params: { id }
     } = req;
     try {
-        const video = await Video.findById(id).populate("creator").populated("comment");
+        const video = await Video.findById(id)
+            .populate("creator")
+            .populate("comment");
         res.render("videoDetail", { pageTitle: video.title, video });
     } catch (error) {
         res.redirect(routes.home);
@@ -110,20 +112,17 @@ export const postRegisterView = async (req, res) => {
     const {
         params: { id }
     } = req;
-    console.log(id);
     try {
         const video = await Video.findById(id);
-        console.log(id);
         video.view += 1;
         video.save();
-        res.statusCode(200);
+        res.status(200);
     } catch (error) {
-        res.statusCode(400);
+        res.status(400);
     } finally {
         res.end();
     }
-}
-
+};
 //Add Commnet
 
 export const postAddComment = async (req, res) => {
