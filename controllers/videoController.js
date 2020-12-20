@@ -2,7 +2,7 @@ import { query } from "express";
 
 import routes from "../routes";
 import Video from "../models/Video";
-import Commnet from "../models/Comment"
+import Comment from "../models/Comment"
 
 export const home = async (req, res) => {
     try {
