@@ -12,7 +12,7 @@ const registerView = () => {
     fetch(`/api/${videoId}/view`, {
         method: "POST"
     });
-}
+};
 
 function handlePlayClick() {
     if (videoPlayer.paused) {
@@ -31,13 +31,13 @@ function handleVolumeClick() {
         volumeRange.value = videoPlayer.volume;
     } else {
         videoPlayer.muted = true;
-        volumeRange.value = 0;
         volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        volumeRange.value = 0;
     }
 }
 
 function exitFullScreen() {
-    fullScrnBtn.innerHTML = '<i class="fas fa-expand"></i>'
+    fullScrnBtn.innerHTML = '<i class = "fas fa-expand"></i>';
     fullScrnBtn.addEventListener("click", goFullScreen);
     if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -60,7 +60,7 @@ function goFullScreen() {
     } else if (videoContainer.msRequestFullscreen) {
         videoContainer.msRequestFullscreen();
     }
-    fullScrnBtn.innerHTML = '<i class="fas fa-compress"></i>'
+    fullScrnBtn.innerHTML = '<i class="fas fa-compress"></i>';
     fullScrnBtn.removeEventListener("click", goFullScreen);
     fullScrnBtn.addEventListener("click", exitFullScreen);
 }
@@ -77,26 +77,27 @@ const formatDate = seconds => {
     if (minutes < 10) {
         minutes = `0${minutes}`;
     }
-    if (seconds < 10) {
+    if (totalSeconds < 10) {
         totalSeconds = `0${totalSeconds}`;
     }
     return `${hours}:${minutes}:${totalSeconds}`;
 };
 
-function getCurrnetTime() {
+function getCurrentTime() {
     currentTime.innerHTML = formatDate(Math.floor(videoPlayer.currentTime));
 }
 
 function setTotalTime() {
     const totalTimeString = formatDate(videoPlayer.duration);
     totalTime.innerHTML = totalTimeString;
-    setInterval(getCurrnetTime, 1000);
+    setInterval(getCurrentTime, 1000);
 }
 
 function handleEnded() {
+    console.log("end video");
     registerView();
     videoPlayer.currentTime = 0;
-    playBtn.innerHTML = '<i class="fas fa-play"</i>';
+    playBtn.innerHTML = '<i class="fas fa-play"></i>'
 }
 
 function handleDrag(event) {

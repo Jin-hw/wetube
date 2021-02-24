@@ -1,12 +1,10 @@
-import { query } from "express";
-
-import routes from "../routes";
+import routes from "../routes"
 import Video from "../models/Video";
-import Comment from "../models/Comment"
+import Comment from "../models/Comment";
 
 export const home = async (req, res) => {
     try {
-        const videos = await Video.find({}).sort({ _id: -1 });
+        const videos = await Video.find({});
         res.render("home", { pageTitle: "Home", videos });
     } catch (error) {
         console.log(error);
@@ -22,14 +20,16 @@ export const search = async (req, res) => {
     try {
         videos = await Video.find({
             title: { $regex: searchingBy, $options: "i" }
-        }) //regex는 포함하는 단어를 찾는 법, $options: "i"는 insensitive로 대소문자 관계없이 검색
+        });
     } catch (error) {
         console.log(error);
     }
+    console.log(videos)
     res.render("search", { pageTitle: "Search", searchingBy, videos });
-};
+}
 
-export const getUpload = (req, res) => res.render("upload", { pageTitle: "Upload" });
+export const getUpload = (req, res) =>
+    res.render("upload", { pageTitle: "Upload" });
 
 export const postUpload = async (req, res) => {
     const {
@@ -37,26 +37,26 @@ export const postUpload = async (req, res) => {
         file: { path }
     } = req;
     const newVideo = await Video.create({
-        fileURL: path,
+        fileUrl: path,
         title,
         description,
         creator: req.user.id
-    });
+    })
     req.user.videos.push(newVideo.id);
     req.user.save();
     res.redirect(routes.videoDetail(newVideo.id));
-};
+}
+
 
 export const videoDetail = async (req, res) => {
     const {
         params: { id }
     } = req;
     try {
-        const video = await Video.findById(id)
-            .populate("creator")
-            .populate("comment");
+        const video = await Video.findById(id).populate("creator").populate("comments");
         res.render("videoDetail", { pageTitle: video.title, video });
     } catch (error) {
+        console.log(error);
         res.redirect(routes.home);
     }
 }
@@ -75,7 +75,8 @@ export const getEditVideo = async (req, res) => {
     } catch (error) {
         res.redirect(routes.home);
     }
-};
+}
+
 export const postEditVideo = async (req, res) => {
     const {
         params: { id },
@@ -95,18 +96,18 @@ export const deleteVideo = async (req, res) => {
     } = req;
     try {
         const video = await Video.findById(id);
-        if (video.creator !== req.user.id) {
+        if (String(video.creator) !== req.user.id) {
             throw Error();
         } else {
-            await Video.findOneAndDelete({ _id: id });
+            await Video.findOneAndRemove({ _id: id });
         }
     } catch (error) {
         console.log(error);
     }
     res.redirect(routes.home);
-}
+};
 
-// Register Video View
+// Register Video view
 
 export const postRegisterView = async (req, res) => {
     const {
@@ -114,7 +115,7 @@ export const postRegisterView = async (req, res) => {
     } = req;
     try {
         const video = await Video.findById(id);
-        video.view += 1;
+        video.views += 1;
         video.save();
         res.status(200);
     } catch (error) {
@@ -123,25 +124,46 @@ export const postRegisterView = async (req, res) => {
         res.end();
     }
 };
-//Add Commnet
+
+// Add Comment
 
 export const postAddComment = async (req, res) => {
+    let step;
     const {
         params: { id },
-        body: { comment },
+        body: { comment, text },
         user
     } = req;
-    try {
-        const video = await Video.findById(id);
-        const newComment = await Comment.create({
-            text: comment,
-            creator: user.id
-        });
-        video.comment.push(newComment.id);
-        video.save();
-    } catch (error) {
-        res.status(400);
-    } finally {
-        res.end()
+    if (text) {
+        try {
+            const video = await Video.findById(id).populate("creator").populate("comments");
+            for (step = 0; step < video.comments.length; step++) {
+                if (video.comments[step].id === text) {
+                    console.log(video.comments[step].id);
+                    video.comments.pull(video.comments[step].id);
+                    video.save();
+                }
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(400);
+        } finally {
+            res.end();
+        }
+    } else {
+        try {
+            const video = await Video.findById(id);
+            const newComment = await Comment.create({
+                text: comment,
+                creator: user.id
+            });
+            video.comments.push(newComment.id);
+            video.save();
+        } catch (error) {
+            console.log(error);
+            res.status(400);
+        } finally {
+            res.end();
+        }
     }
-}
+};

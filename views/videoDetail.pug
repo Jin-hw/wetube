@@ -4,33 +4,37 @@ include mixins/videoPlayer
 block content
     .video-detail__container
         +videoPlayer({
-            src:video.fileURL
+            src:video.fileUrl
         })
-        .video__info   
-            if loggedUser && video.creator.id === loggedUser.id
-                a(href=routes.editVideo(video.id)) 
-                    button Edit video
-            h5.video__title=video.title 
+        .video__info
+            if loggedUser 
+                if video.creator.id === loggedUser.id
+                    a(href=routes.editVideo(video.id))
+                        button Edit video
+            h5.video__title=video.title
             p.video__description=video.description
-            if video.view === 1
+            if video.views === 1
                 span.video__views 1 view
-            else
-                span.video__views #{video.view} views
+            else 
+                span.video__views #{video.views} views
             .video__author
                 |Uploaded by 
                 a(href=routes.userDetail(video.creator.id))=video.creator.name
         .video__comments
-            if video.comment.length === 1
+            if video.comments.length === 1
                 span.video__comment-number
-                    span#jsCommentNumber 1 
+                    span#jsCommentNumber 1
                     |  comment
             else
                 span.video__comment-number
-                    span#jsCommentNumber=video.comment.length 
+                    span#jsCommentNumber=video.comments.length
                     |  comments
             form.add__comment#jsAddComment
-                input(type="text", placeholder="Add a commnet")
-            ul.video__comment-list#jsCommentList
-                each comment in video.comment.reverse()
-                   li
-                        span=comment.text
+                input(type="text", placeholder="Add a comment")
+            ul.video__comments-list#jsCommentList
+                each comment in video.comments.reverse()
+                    div
+                        li(class=comment.id)
+                            span=comment.text
+                        if loggedUser && String(comment.creator) === loggedUser.id
+                            span.jsDeleteComment ❌

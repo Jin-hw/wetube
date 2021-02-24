@@ -5,6 +5,7 @@ import User from "../models/User";
 export const getJoin = (req, res) => {
     res.render("join", { pageTitle: "Join" });
 };
+
 export const postJoin = async (req, res, next) => {
     const {
         body: { name, email, password, password2 }
@@ -27,14 +28,15 @@ export const postJoin = async (req, res, next) => {
     }
 };
 
-export const githubLogin = passport.authenticate("github");
-
-export const getLogin = (req, res) => res.render("login", { pageTitle: "Login" });
+export const getLogin = (req, res) =>
+    res.render("login", { pageTitle: "Login" });
 
 export const postLogin = passport.authenticate('local', {
     failureRedirect: routes.login,
     successRedirect: routes.home
 });
+
+export const githubLogin = passport.authenticate("github");
 
 export const githubLoginCallback = async (_, __, profile, cb) => {
     const {
@@ -79,21 +81,23 @@ export const logout = (req, res) => {
     res.redirect(routes.home);
 };
 
-export const getMe = (req, res) => {
-    res.render("userDetail", { pageTitle: "User Detail", user: req.user });
-    //console.log(req.user);
-}
+export const getMe = async (req, res) => {
+    const user = await User.findById(req.user.id).populate("videos")
+    res.render("userDetail", { pageTitle: "User Detail", user });
+};
 
 export const userDetail = async (req, res) => {
-    const { params: { id } } = req;
+    const {
+        params: { id }
+    } = req;
     try {
-        const user = await User.findById(id).populate("videos");
+        const user = await User.findById(id).populate('videos');
+        console.log(user);
         res.render("userDetail", { pageTitle: "User Detail", user });
     } catch (error) {
         res.redirect(routes.home);
     }
-}
-
+};
 
 export const getEditProfile = (req, res) => res.render("editProfile", { pageTitle: "Edit Profile" });
 
@@ -103,7 +107,7 @@ export const postEditProfile = async (req, res) => {
         file
     } = req;
     try {
-        await User.findByIdAndUpdate(req.user._id, {
+        await User.findByIdAndUpdate(req.user.id, {
             name,
             email,
             avatarUrl: file ? file.path : req.user.avatarUrl
@@ -114,7 +118,8 @@ export const postEditProfile = async (req, res) => {
     }
 };
 
-export const getChangePassword = (req, res) => res.render("changePassword", { pageTitle: "Change Password" });
+export const getChangePassword = (req, res) =>
+    res.render("changePassword", { pageTitle: "Change Password" });
 
 export const postChangePassword = async (req, res) => {
     const {

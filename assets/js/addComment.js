@@ -6,16 +6,17 @@ const commentNumber = document.getElementById("jsCommentNumber");
 
 const increaseNumber = () => {
     commentNumber.innerHTML = parseInt(commentNumber.innerHTML, 10) + 1;
-}
+};
 
-const addComment = (comment) => {
+const addComment = comment => {
     const li = document.createElement("li");
     const span = document.createElement("span");
     span.innerHTML = comment;
     li.appendChild(span);
     commentList.prepend(li);
     increaseNumber();
-}
+    window.location.reload();
+};
 
 const sendComment = async comment => {
     const videoId = window.location.href.split("/videos/")[1];

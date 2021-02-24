@@ -12,22 +12,21 @@ const handleVideoData = event => {
     link.download = "recorded.webm";
     document.body.appendChild(link);
     link.click();
-}
+};
 
-const stopRecoding = () => {
+const stopRecording = () => {
     videoRecorder.stop();
-    recordBtn.removeEventListener("click", stopRecoding);
+    recordBtn.removeEventListener("click", stopRecording);
     recordBtn.addEventListener("click", getVideo);
     recordBtn.innerHTML = "Start recording";
-}
+};
 
 const startRecording = () => {
     videoRecorder = new MediaRecorder(streamObject);
     videoRecorder.start();
     videoRecorder.addEventListener("dataavailable", handleVideoData);
-    recordBtn.addEventListener("click", stopRecoding)
-}
-
+    recordBtn.addEventListener("click", stopRecording);
+};
 
 const getVideo = async () => {
     try {
@@ -40,7 +39,7 @@ const getVideo = async () => {
         videoPreview.play();
         recordBtn.innerHTML = "Stop recording";
         streamObject = stream;
-        startRecording(stream);
+        startRecording();
     } catch (error) {
         recordBtn.innerHTML = "☹️ Cant record";
     } finally {
