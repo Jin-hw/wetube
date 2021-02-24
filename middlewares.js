@@ -3,7 +3,7 @@ import routes from "./routes";
 
 const multerVideo = multer({ dest: "uploads/videos/" });
 //'/uploads/videos/'라고 쓰면 로컬 내부의 경로라고 생각하고 로컬 경로에 upload를 만듦
-const multerAvatar = multer({ dest: "upload/avatars/" });
+const multerAvatar = multer({ dest: "uploads/avatars/" });
 
 export const localMiddleware = (req, res, next) => {
     res.locals.siteName = "WeTube";

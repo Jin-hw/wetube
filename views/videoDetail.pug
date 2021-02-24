@@ -37,4 +37,5 @@ block content
                         li(class=comment.id)
                             span=comment.text
                         if loggedUser && String(comment.creator) === loggedUser.id
-                            span.jsDeleteComment ❌
+                            span.jsDeleteComment
+                                i.far.fa-times-circle

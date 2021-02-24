@@ -28,9 +28,9 @@ const sendComment = async (text, parent) => {
 };
 
 const handleSubmit = (e) => {
-    if (e.toElement.className === "jsDeleteComment") {
-        const text = e.target.parentElement.firstChild.className;
-        const parent = e.target.parentElement;
+    if (e.target.parentElement.className === "jsDeleteComment") {
+        const text = e.target.parentElement.parentElement.firstChild.className;
+        const parent = e.target.parentElement.parentElement;
         sendComment(text, parent);
     }
 };
