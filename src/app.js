@@ -1,3 +1,4 @@
+import "@babel/polyfill";
 import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
@@ -6,6 +7,7 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import mongoose from "mongoose";
 import session from "express-session";
+import path from "path";
 import MongoStore from "connect-mongo";
 import { localMiddleware } from "./middlewares";
 import routes from "./routes";
@@ -26,8 +28,10 @@ app.use(
     })
 );
 app.set("view engine", "pug");
-app.use("/uploads", express.static("uploads")); //file 을 directory에 전달하는 middleware, 경로가 uploads라면 uploads라는 directory안으로 file이 들어감
-app.use("/static", express.static("static"));
+app.set("views", path.join(__dirname, "views"));
+//app.use("/uploads", express.static("uploads")); //file 을 directory에 전달하는 middleware, 경로가 uploads라면 uploads라는 directory안으로 file이 들어감
+app.use("/static", express.static(path.join(__dirname, "static")));
+//app.use("/static", express.static("static"));
 app.use(cookieParser());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
