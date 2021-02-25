@@ -24,7 +24,6 @@ export const search = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-    console.log(videos)
     res.render("search", { pageTitle: "Search", searchingBy, videos });
 }
 
