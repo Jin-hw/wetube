@@ -13,10 +13,11 @@ https://murmuring-wildwood-24907.herokuapp.com
 
 ## Fiture
 ----
-- Upload Video
+- Upload&Play Video
+[![Upload](https://img.youtube.com/vi/Srd_kB_HRjw/0.jpg)](https://youtu.be/Srd_kB_HRjw)
 
-
-[![Upload]((https://img.youtube.com/vi/Srd_kB_HRjw/0.jpg)](https://youtu.be/Srd_kB_HRjw)
+- Update&Delete
+[![Update&delete](https://img.youtube.com/vi/uPzMBfZfJRM/0.jpg)](https://youtu.be/uPzMBfZfJRM)
 
 ## page:
 
