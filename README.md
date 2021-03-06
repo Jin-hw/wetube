@@ -11,12 +11,12 @@ https://murmuring-wildwood-24907.herokuapp.com
 - Back-end: NodeJS, MongoDB, Express
 - Deployment: AWS S3, Heroku, Mongo Atlas
 
-## Fiture
+## Feature
 ----
 - Upload&Play Video
 [![Upload](https://img.youtube.com/vi/Srd_kB_HRjw/0.jpg)](https://youtu.be/Srd_kB_HRjw)
 
-- Update&Delete
+- Update&Delete Video
 [![Update&delete](https://img.youtube.com/vi/uPzMBfZfJRM/0.jpg)](https://youtu.be/uPzMBfZfJRM)
 
 ## page:
